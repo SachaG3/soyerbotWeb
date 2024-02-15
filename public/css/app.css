@@ -1,0 +1,18 @@
+.container-fluid{
+    background-color: #333838;
+}
+.nav1{
+    background-color: #4b5563;
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+p{
+    color: white !important;
+}
+a{
+    text-decoration: none;
+    color: white !important;
+}
+.field-icon {
+    z-index: 2;
+}
