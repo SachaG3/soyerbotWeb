@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\LinkAccountController;
+use App\Http\Controllers\errorController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
@@ -32,3 +33,5 @@ Route::post('/logout', function () {
 })->name('logout');
 Route::get('/setting',[SettingController::class,'index'])->name('setting');
 Route::put('/setting', [SettingController::class,'update'])->name('settings.update');
+Route::get('/error',[errorController::class,'error'])->name('error');
+Route::get('/verify-email/{token}', 'VerifyEmailController@verify')->name('verify.email');

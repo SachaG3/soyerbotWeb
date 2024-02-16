@@ -16,3 +16,63 @@ a{
 .field-icon {
     z-index: 2;
 }
+.discord-invite-container {
+    font-family: Arial, sans-serif;
+    background-color: #2C2F33;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 300px;
+}
+
+.discord-invite-header h3 {
+    color: #7289DA;
+    margin-bottom: 15px;
+}
+
+.discord-invite-content {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+
+}
+
+.discord-invite-container {
+    min-width: 320px; /* Ajustez cette valeur selon vos besoins */
+    max-width: 600px; /* Ajustez ou enlevez cette valeur selon vos besoins */
+    margin: auto; /* Centrer le conteneur si moins large que l'espace disponible */
+}
+
+
+.discord-guild-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    margin-right: 15px;
+}
+
+.discord-guild-info h4 {
+    margin: 0;
+    color: #FFFFFF;
+}
+
+.discord-guild-stats {
+    margin-top: 5px;
+    color: #99AAB5;
+}
+
+.discord-invite-join-btn {
+    background-color: #5865F2;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    width: 100%;
+}
+
+.discord-invite-join-btn:hover {
+    background-color: #4752C4;
+}

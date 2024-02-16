@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\TokenDiscord;
 use App\Models\Utilisateur; // Utilisez le modèle Utilisateur au lieu de User
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
@@ -12,15 +13,22 @@ class LinkAccountController extends Controller
 {
     public function showLinkForm($token)
     {
-        // Vérifiez si le token existe
         $tokenRecord = TokenDiscord::where('token', $token)->first();
 
         if (!$tokenRecord) {
             return redirect('/')->with('error', 'Token invalide.');
         }
+        $dateCreation = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $tokenRecord->date_creation, 'UTC')
+            ->setTimezone('Europe/Paris');
 
-        return view('auth.link', compact('token')); // Assurez-vous que cette vue existe
+        $token15=true;
+        if (now()->diffInMinutes($dateCreation) > 15) {
+            $token15=false;
+        }
+        $userStatus = $tokenRecord->utilisateur->active;
+        return view('auth.link', compact('token','userStatus','token15'));
     }
+
 
     public function linkAccount(Request $request, $token)
     {
