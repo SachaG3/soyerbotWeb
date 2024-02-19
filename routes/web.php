@@ -1,11 +1,14 @@
 <?php
 
+use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LinkAccountController;
 use App\Http\Controllers\errorController;
 use App\Http\Controllers\homeController;
 use App\Http\Controllers\SettingController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,10 +20,7 @@ use App\Http\Controllers\Auth\LoginController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
-
-
-
+Auth::routes();
 
 Route::get("/home",[homeController::class, 'Home'])->name('Home');
 Route::get('/token/{token}', [LinkAccountController::class, 'showLinkForm'])->name('account.link');
@@ -34,4 +34,17 @@ Route::post('/logout', function () {
 Route::get('/setting',[SettingController::class,'index'])->name('setting');
 Route::put('/setting', [SettingController::class,'update'])->name('settings.update');
 Route::get('/error',[errorController::class,'error'])->name('error');
-Route::get('/verify-email/{token}', 'VerifyEmailController@verify')->name('verify.email');
+Route::get('/verification/{token}',[LinkAccountController::class,'verifyEmail']);
+Route::post('/reset-password',[LoginController::class,'showResetPassword'])->name('reset.password');
+Route::get('/reset-password/{token}',[LoginController::class,'resetPassword']);
+Route::put('/password-reset',[LoginController::class,'passwordReset'])->name('password-reset');
+
+
+// Routes pour les tickets
+Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+Route::get('/tickets/create', [TicketController::class, 'showCreateTicketForm'])->name('tickets.create');
+Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');
+Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+Route::post('/responses/{response}/images', [TicketController::class, 'addImageToResponse'])->name('responses.images.store');
+Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
+

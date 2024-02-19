@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SoyerBot</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <!-- Importation de Bootstrap CSS via CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </head>
@@ -13,10 +12,8 @@
 
 <div class="container-fluid">
     <div class="row">
-        <!-- Navbar Verticale -->
-        <nav class="col-md-2 d-none d-md-block bg-dark sidebar position-relative nav1 " style="height: 100vh">
+        <nav class="col-md-2 d-none d-md-block bg-dark sidebar position-fixed nav1 " style="height: 100vh; width: 15%">
             <div class="sidebar-sticky d-flex flex-column">
-                <!-- Liens Principaux -->
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="{{route('Home')}}">Accueil</a>
@@ -31,9 +28,11 @@
                         <a class="nav-link" href="#">À propos</a>
                     </li>
                 </ul>
-                <!-- Liens Connexion/Déconnexion -->
                 <ul class="nav flex-column position-absolute bottom-0 w-100">
                     @auth
+                        <li class="nav-item">
+                            <a href="{{route('tickets.index')}}" class="nav-link">Tickets</a>
+                        </li>
                         <li class="nav-item">
                             <a href="{{route('setting')}}" class="nav-link">{{Auth::user()->pseudo}}</a>
                         </li>
@@ -51,6 +50,7 @@
                 </ul>
             </div>
         </nav>
-        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+        <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4 navbarFixed" style="min-height: 100vh" >
+
 
 

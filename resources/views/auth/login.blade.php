@@ -32,21 +32,27 @@
                 <span toggle="#password" class="fa fa-fw fa-eye field-icon toggle-password position-absolute" style="top: 38px; right: 10px; cursor: pointer;"></span>
             </div>
 
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" name="remember" id="remember" class="form-check-input">
+                    <label for="remember" class="form-check-label text-white">Se souvenir de moi</label>
+                </div>
+            </div>
 
-            <!-- Ajout de la classe mt-3 (margin-top) pour espacer le bouton du champ précédent -->
             <div class="form-group mt-3">
                 <button type="submit" class="btn btn-secondary btn-block">Connexion</button>
             </div>
         </form>
+            <div class="form-group mt-3">
+                <a href="">Réinitialiser sont mot de passe </a>
+            </div>
+
     </div>
 </div>
 <script>
     $(document).ready(function() {
-        // Basculer entre afficher/masquer le mot de passe
         $('.toggle-password').click(function() {
-            // Récupère l'élément input
             let input = $($(this).attr("toggle"));
-            // Vérifie si le type est password ou non
             if (input.attr("type") == "password") {
                 input.attr("type", "text");
                 $(this).removeClass('fa-eye').addClass('fa-eye-slash'); // Change l'icône

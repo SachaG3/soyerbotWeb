@@ -1,4 +1,5 @@
 @include('layout.header')
+
 @auth()
     <div class="d-flex justify-content-center align-items-center " style="min-height: 100vh">
         <div class="text-center">
@@ -25,7 +26,8 @@
             </div>
         </div>
     </div>
-@elseif($token15 = false)
+
+@elseif($token15 === false)
     <div class="d-flex justify-content-center align-items-center" style="min-height: 100vh">
         <div class="text-center">
             <div class="alert mt-4 bg-dark text-white border border-light" role="alert" style="font-size: 1.3em;">

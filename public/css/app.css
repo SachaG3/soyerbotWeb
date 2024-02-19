@@ -76,3 +76,37 @@ a{
 .discord-invite-join-btn:hover {
     background-color: #4752C4;
 }
+.image-container img:hover {
+    transform: scale(1);
+    transition: transform .3s ease-in-out;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+@media (min-width: 768px) {
+    .content-adjusted {
+        margin-left: 200px;
+    }
+}
+
+.navbarFixed{
+    margin-left: 15.85%;
+}
+body {
+    background-color: #f4f4f4;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.card-footer {
+    background-color: #fff;
+}
+
+.badge {
+    padding: 5px 10px;
+    font-size: 0.875em;
+}
+
+.btn-danger {
+    float: right;
+}

@@ -3,11 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\VerifyEmailMailable;
 use App\Models\TokenDiscord;
-use App\Models\Utilisateur; // Utilisez le modèle Utilisateur au lieu de User
+use App\Models\Utilisateur;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
+use App\Mail\resetPassword;
 
 class LinkAccountController extends Controller
 {
@@ -18,8 +22,7 @@ class LinkAccountController extends Controller
         if (!$tokenRecord) {
             return redirect('/')->with('error', 'Token invalide.');
         }
-        $dateCreation = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $tokenRecord->date_creation, 'UTC')
-            ->setTimezone('Europe/Paris');
+        $dateCreation = $tokenRecord->date_creation;
 
         $token15=true;
         if (now()->diffInMinutes($dateCreation) > 15) {
@@ -33,29 +36,57 @@ class LinkAccountController extends Controller
     public function linkAccount(Request $request, $token)
     {
         $request->validate([
-            'email' => 'required|email|unique:utilisateurs,email', // Assurez-vous d'utiliser la table utilisateurs
+            'email' => 'required|email|unique:utilisateurs,email',
             'password' => 'required|min:8|confirmed',
         ]);
 
         $tokenRecord = TokenDiscord::where('token', $token)->firstOrFail();
+        $emailVerificationToken = Str::random(60);
 
-        // Créez ou mettez à jour l'utilisateur avec l'email, le mot de passe et le rôle
         $user = Utilisateur::updateOrCreate(
-            ['id' => $tokenRecord->id_utilisateur], // Utilisez le champ approprié pour l'identification
+            ['id' => $tokenRecord->id_utilisateur],
             [
                 'email' => $request->email,
-                'password' => Hash::make($request->password), // Hash du mot de passe
-                'role' => 1, // Set le rôle à 1
-                'active' => true, // Activez le compte, si nécessaire
+                'password' => Hash::make($request->password),
+                'role' => 1,
+                'active' => true,
+                'email_verified_at'=>now(),
+                'email_verification_token' => $emailVerificationToken
             ]
         );
+        auth()->login($user, true);
 
-        // Connectez l'utilisateur
-        auth()->login($user, true); // Le second paramètre `true` force la "remember" functionality
-
-        // Supprimez le token si vous ne souhaitez pas qu'il soit réutilisé
         $tokenRecord->delete();
 
-        return redirect()->route('home')->with('success', 'Compte lié avec succès.');
+
+        Mail::to($request->email)->send(new VerifyEmailMailable($emailVerificationToken));
+
+
+        return redirect()->route('Home')->with('success', 'Compte lié avec succès.');
+    }
+    public function verifyEmail($token)
+    {
+        $user = Utilisateur::where('email_verification_token', $token)->first();
+
+        if (!$user) {
+            return redirect('/')->with('error', 'Token de vérification d\'e-mail invalide.');
+        }
+
+        $emailVerificationCreatedAt = Carbon::parse($user->email_verification_at);
+
+        if (Carbon::now()->diffInMinutes($emailVerificationCreatedAt) > 15) {
+            $emailVerificationToken = Str::random(60);
+            $user->email_verification_token = $emailVerificationToken;
+            $user->email_verified_at = now();
+            $user->save();
+
+            Mail::to($user->email)->send(new resetPassword($emailVerificationToken));
+            return redirect('errors.mailtoken')->with('error', 'Le délai de vérification de l\'e-mail est dépassé. Un nouvel e-mail de vérification a été envoyé.');
+        }
+
+        $user->email_validated = 1;
+        $user->save();
+
+        return redirect()->route('Home')->with('success', 'E-mail vérifié avec succès.');
     }
 }
