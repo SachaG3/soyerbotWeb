@@ -47,23 +47,6 @@ class TicketController extends Controller
     }
 
 
-
-    public function addResponseToTicket(Request $request, $ticketId)
-    {
-        $request->validate([
-            'response' => 'required|string',
-        ]);
-
-        $response = TicketResponse::create([
-            'ticket_id' => $ticketId,
-            'user_id' => Auth::id(),
-            'content' => $request->response,
-        ]);
-
-        return response()->json(['message' => 'Nouveau message ajouté avec succès au ticket', 'response' => $response]);
-    }
-
-    // Ajouter une image à un message
     public function addImageToResponse(Request $request, $responseId)
     {
         $request->validate([
@@ -81,44 +64,47 @@ class TicketController extends Controller
     }
     public function showCreateTicketForm()
     {
-        return view('ticket.create');
+        if (request()->ajax()) {
+            return response()->json(['html' => view('ticket.partial.create')->render()]);
+        } else {
+            return view('ticket.create');
+        }
     }
 
-    public function showAddResponseForm($ticketId)
+    public function index(Request $request)
     {
-        return view('ticket.add_response', compact('ticketId'));
-    }
-
-    public function showAddImageForm($responseId)
-    {
-        return view('ticket.add_image', compact('responseId'));
-    }
-    public function index()
-    {
-
-        if (auth()->user()->role >= 4) {
+        if ($request->user()->role >= 4) {
             $tickets = SupportTicket::orderBy('status', 'asc')
                 ->orderBy('created_at', 'desc')
                 ->paginate(8);
         } else {
-            $tickets = SupportTicket::where('user_id', auth()->id())
+            $tickets = SupportTicket::where('user_id', $request->user()->id)
                 ->orderBy('status', 'asc')
                 ->orderBy('created_at', 'desc')
                 ->paginate(8);
+        }
+
+        if ($request->ajax()) {
+            return view('ticket.partial.index', compact('tickets'))->render();
         }
 
         return view('ticket.index', compact('tickets'));
     }
 
 
+
+    // Dans TicketController
     public function show($ticketId)
     {
-        // Récupère le ticket et ses relations en utilisant `with` pour un chargement eager
         $ticket = SupportTicket::with(['responses.user', 'responses.images'])->findOrFail($ticketId);
 
-
-        return view('ticket.show', compact('ticket'));
+        if (request()->ajax()) {
+            return response()->json(['html' => view('ticket.partial.show', compact('ticket'))->render()]);
+        } else {
+            return view('ticket.show', compact('ticket'));
+        }
     }
+
     public function storeResponse(Request $request, $ticketId)
     {
         $request->validate([

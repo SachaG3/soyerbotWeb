@@ -40,7 +40,6 @@ Route::get('/reset-password/{token}',[LoginController::class,'resetPassword']);
 Route::put('/password-reset',[LoginController::class,'passwordReset'])->name('password-reset');
 
 
-// Routes pour les tickets
 Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
 Route::get('/tickets/create', [TicketController::class, 'showCreateTicketForm'])->name('tickets.create');
 Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');

@@ -1,45 +1,46 @@
 @include('layout.header')
 
-<div class="container mt-5" >
-    <h1 class="mb-4 text-white">Tickets</h1>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card bg-info h-100">
-                <div class="card-body text-center d-flex flex-column justify-content-center">
-                    <h5 class="card-title text-white">Nouveau Ticket</h5>
-                    <p class="card-text text-white">Une question, un problème ? Créez un ticket pour obtenir de l'aide.</p>
-                    <a href="{{ route('tickets.create') }}" class="btn btn-light mt-3 text-black">Créer un Ticket</a>
-                </div>
-            </div>
+<div id="content">
+    <div class="container">
+        <div id="tickets-container">
+            @include('ticket.partial.index', ['tickets' => $tickets])
         </div>
-
-        @foreach ($tickets as $ticket)
-            <div class="col">
-                <div class="card bg-dark text-white h-100">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ $ticket->subject }}</h5>
-                        <p>Créé par: {{ $ticket->user->pseudo }}</p>
-                        <!-- Bouton indiquant le statut du ticket -->
-                        @if ($ticket->status == 0)
-                            <p class="badge bg-warning text-dark">En cours</p>
-                        @else
-                            <p class="badge bg-success">Terminé</p>
-                        @endif
-                    </div>
-                    <div class="card-footer bg-secondary d-flex justify-content-between">
-                        <a href="{{ route('tickets.show', $ticket) }}" class="btn btn-primary">Voir le ticket</a>
-                        <button class="btn btn-danger">Corbeille</button>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-
     </div>
 </div>
-@if(is_object($tickets))
-<div class=" container d-flex text-dark" style="margin-top: 3%; color: black !important;">
-    {{ $tickets->links() }}
-</div>
-@endif
+
 
 @include('layout.footer')
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.body.addEventListener('click', function(e) {
+            if (e.target.matches('.ajax-link')) {
+                e.preventDefault();
+                const url = e.target.href;
+
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById('content').innerHTML = data.html;
+                        history.pushState(null, '', url);
+                    }).catch(error => console.error('Error:', error));
+            }
+        });
+        document.addEventListener('click', function(e) {
+            if (e.target.matches('.ajax-link, .pagination a')) {
+                e.preventDefault();
+                const url = e.target.href;
+                fetch(url, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+                    .then(response => response.text())
+                    .then(html => {
+                        document.getElementById('tickets-container').innerHTML = html;
+                        history.pushState({ path: url }, '', url);
+                    }).catch(error => console.error('Error:', error));
+            }
+        });
+
+        window.onpopstate = function() {
+            window.location.href = window.location.href;
+        };
+    });
+</script>
+
