@@ -21,4 +21,17 @@ class Handler extends ExceptionHandler
     /**
      * Register the exception handling callbacks for the application.
      */
+
+    public function render($request, Throwable $exception)
+    {
+        return redirect()->route('error')->with('error', 'Une erreur est survenue.');
+    }
+    public function register() {
+        $this->reportable(function (Throwable $e) {
+            //
+            if (app()->bound('sentry')) {
+                app('sentry')->captureException($e);
+            }
+        });
+    }
 }

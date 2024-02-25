@@ -44,6 +44,5 @@ Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index'
 Route::get('/tickets/create', [TicketController::class, 'showCreateTicketForm'])->name('tickets.create');
 Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');
 Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-Route::post('/responses/{response}/images', [TicketController::class, 'addImageToResponse'])->name('responses.images.store');
 Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
 

@@ -110,3 +110,38 @@ body {
 .btn-danger {
     float: right;
 }
+
+.alert-fixed {
+    margin-top: 4%;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+width: 80%;
+    max-width: 800px;
+    border-radius: 10px;
+}
+
+.alert-centered {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#floating-alerts-container {
+    position: fixed;
+    top: 10px;
+    left: 57.51%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    text-align: center;
+    min-width: 20%;
+
+}
