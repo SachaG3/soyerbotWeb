@@ -2,13 +2,13 @@
 
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\LinkAccountController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\SettingController;
 use App\Http\Controllers\errorController;
 use App\Http\Controllers\homeController;
-use App\Http\Controllers\SettingController;
+use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,9 +40,13 @@ Route::get('/reset-password/{token}',[LoginController::class,'resetPassword']);
 Route::put('/password-reset',[LoginController::class,'passwordReset'])->name('password-reset');
 
 
-Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
-Route::get('/tickets/create', [TicketController::class, 'showCreateTicketForm'])->name('tickets.create');
-Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');
-Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
-Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
+Route::middleware(['auth.custom'])->group(function () {
+    Route::get('/tickets', [TicketController::class, 'index'])->name('tickets.index');
+    Route::get('/tickets/create', [TicketController::class, 'showCreateTicketForm'])->name('tickets.create');
+    Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');
+    Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
+    Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
+});
 
+
+Route::get('/',[homeController::class,'index'])->name('Home');

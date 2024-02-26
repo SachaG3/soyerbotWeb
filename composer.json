@@ -12,7 +12,8 @@
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.4",
         "sentry/sentry-laravel": "^4.2",
-        "spatie/laravel-sitemap": "^7.0"
+        "spatie/laravel-sitemap": "^7.0",
+      "ext-http": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

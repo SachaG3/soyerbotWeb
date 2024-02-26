@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -21,15 +22,17 @@ class SettingController extends Controller
         $validatedData = $request->validate([
             'pseudo' => 'required|max:255',
             'email' => 'required|email|max:255|unique:utilisateurs,email,' . $user->id,
-            'password' => ['confirmed', 'min:8'],
         ]);
 
-        // Vérifie et traite le changement de mot de passe
-        if ($request->has('current_password')) {
-            if (!(Hash::check($request->get('current_password'), Auth::user()->password))) {
+        // Validation conditionnelle du mot de passe
+        if ($request->filled('password')) {
+            $request->validate([
+                'password' => 'confirmed|min:8',
+            ]);
+            if (!(Hash::check($request->get('current_password'), $user->password))) {
                 return back()->with("error", "Votre mot de passe actuel ne correspond pas au mot de passe que vous avez fourni.");
             }
-            $validatedData = array_merge($validatedData, ['password' => Hash::make($request->get('password'))]);
+            $validatedData['password'] = Hash::make($request->get('password'));
         }
 
         // Met à jour l'utilisateur avec les données validées
@@ -38,5 +41,6 @@ class SettingController extends Controller
         // Redirige vers la page des paramètres avec un message de succès
         return redirect()->route('setting')->with('success', 'Informations mises à jour avec succès');
     }
+
 
 }

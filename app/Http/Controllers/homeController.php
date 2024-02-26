@@ -9,6 +9,10 @@ use Illuminate\Support\Facades\Mail;
 
 class homeController extends Controller
 {
+    public function index()
+    {
+        return view('index');
+    }
     public function Home()
     {
         return view('home');

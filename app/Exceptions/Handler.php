@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use HttpException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Session\TokenMismatchException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -24,6 +28,25 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        // Gestion du token CSRF manquant ou incorrect
+        if ($exception instanceof TokenMismatchException) {
+            return redirect()->route('login')->with('error', 'Votre session a expiré. Veuillez vous reconnecter.');
+        }
+        // Gestion des erreurs d'authentification
+        if ($exception instanceof AuthenticationException) {
+            return redirect()->route('login')->with('error', 'Veuillez vous connecter pour accéder à cette page.');
+        }
+        // Gestion des erreurs d'autorisation
+        if ($exception instanceof AuthorizationException) {
+            return redirect()->route('login')->with('error', 'Vous n’avez pas les droits nécessaires pour accéder à cette page.');
+        }
+        // Gestion des autres erreurs HTTP (par exemple, 403 Forbidden)
+        if ($exception instanceof HttpException) {
+            $statusCode = $exception->getStatusCode();
+            if ($statusCode == 403) {
+                return redirect()->route('login')->with('error', 'Accès refusé. Vous devez être connecté pour voir cette page.');
+            }
+        }
         return redirect()->route('error')->with('error', 'Une erreur est survenue.');
     }
     public function register() {

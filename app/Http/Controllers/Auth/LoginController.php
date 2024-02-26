@@ -96,7 +96,7 @@ class LoginController extends Controller
 
         // Envoie un email avec le token de réinitialisation
         Mail::to($user->email)->send(new resetPassword($passwordVerificationToken));
-        return route('login');
+        return redirect(route('login'));
     }
 
     // Réinitialisation du mot de passe avec le token

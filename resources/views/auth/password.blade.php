@@ -1,9 +1,4 @@
 @include('layout.header')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
-
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
     <div class="col-6 border border-light rounded p-4 bg-dark shadow">
         @if ($errors->any())
@@ -17,6 +12,7 @@
         @endif
 
         <form method="POST" action="{{ route('password-reset') }}" class="px-4 py-3 bg-dark text-white">
+            <h2 class="text-white mb-4">Nouveau mot de passe</h2>
             @csrf
             @method('PUT')
             <input hidden name="token" value="{{$token}}" >

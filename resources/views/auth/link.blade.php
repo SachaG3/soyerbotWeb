@@ -40,6 +40,7 @@
     <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="col-6 border border-light rounded p-4 bg-dark shadow">
             <form method="POST" action="{{ route('account.link', ['token' => $token]) }}" class="px-4 py-3 bg-dark text-white">
+                <h2 class="text-white mb-4">Création de compte</h2>
                 @csrf
                 <div class="form-group">
                     <label for="email" class="text-white">Email</label>
