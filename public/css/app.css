@@ -86,10 +86,17 @@ a{
         margin-left: 200px;
     }
 }
-
-.navbarFixed{
-    margin-left: 15.85%;
+@media (min-width: 768px) {
+    .navbarFixed{
+        margin-left: 15.85%;
+    }
 }
+@media (max-width: 768px) {
+    .margintop-mobile{
+        margin-bottom: 10% !important;
+    }
+}
+
 body {
     background-color: #f4f4f4;
 }
@@ -145,3 +152,7 @@ li {
     min-width: 20%;
 
 }
+
+
+
+

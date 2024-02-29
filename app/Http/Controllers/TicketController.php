@@ -146,4 +146,50 @@ class TicketController extends Controller
         // Redirige l'utilisateur vers la page des détails du ticket avec un message de succès
         return redirect()->route('tickets.show', $ticketId)->with('success', 'Réponse ajoutée avec succès.');
     }
+    public function destroy(SupportTicket $ticket)
+    {
+        $role = Auth::user()->role;
+        // Vérifie si l'utilisateur est autorisé à supprimer ce ticket
+        if (Auth::id() == $ticket->user_id or $role >= 4) {
+
+            // Supprime toutes les images associées aux réponses du ticket
+            $ticketResponses = $ticket->responses();
+
+            foreach ($ticketResponses as $response) {
+                $response->images()->delete();
+            }
+
+            // Supprime toutes les réponses associées à ce ticket
+            $ticket->responses()->delete();
+
+            // Supprime le ticket lui-même
+            $ticket->delete();
+
+            // Redirige l'utilisateur avec un message de succès
+            return response()->json(['status' => 'success', 'message' => 'Le ticket a été supprimé avec succès.']);
+        }
+        else{
+            // Si l'utilisateur n'est pas autorisé, redirigez-le avec un message d'erreur
+            return response()->json(['status' => 'error', 'message' => 'Vous n\'avez pas le droit de supprimer ce ticket.'], 403);
+        }
+
+
+    }
+    public function updateStatus(Request $request, SupportTicket $ticket)
+    {
+        try {
+            $status = $request->get('status');
+
+            if (!in_array($status, [0, 1])) {
+                return response()->json(['status' => 'error', 'message' => 'État de ticket invalide.']);
+            }
+
+            $ticket->status = $status;
+            $ticket->save();
+
+            return response()->json(['status' => 'success', 'message' => 'Statut de ticket mis à jour avec succès.']);
+        } catch (Exception $e) {
+            return response()->json(['status' => 'error', 'message' => 'Erreur lors de la mise à jour du statut du billet.']);
+        }
+    }
 }

@@ -1,8 +1,8 @@
-<div class="container mt-5">
+<div class="container mt-5 mt-md-0 pt-5">
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="card">
-                <div class="card-header bg-primary text-white">Créer un nouveau ticket</div>
+                <div class="card-header text-white bg-secondary">Créer un nouveau ticket</div>
                 <div class="card-body bg-dark text-white">
                     <form class="ajax-link" action="{{ route('tickets.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
@@ -23,7 +23,7 @@
                         </div>
 
                         <div class="d-grid gap-2">
-                            <button type="submit" class="btn btn-success">Créer Ticket</button>
+                            <button type="submit" class="btn btn-secondary btn-block">Créer Ticket</button>
                         </div>
                     </form>
                 </div>

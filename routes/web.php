@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\SettingController;
 use App\Http\Controllers\errorController;
 use App\Http\Controllers\homeController;
+use App\Http\Controllers\logMessage\messageController;
 use App\Http\Controllers\TicketController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -46,7 +47,12 @@ Route::middleware(['auth.custom'])->group(function () {
     Route::post('/tickets', [TicketController::class, 'createTicket'])->name('tickets.store');
     Route::get('/tickets/{ticket}', [TicketController::class, 'show'])->name('tickets.show');
     Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
+    Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
+    Route::post('/tickets/status/{ticket}', [TicketController::class, 'updateStatus']);
+    Route::get('/user/messages', [messageController::class, 'getUserMessages'])->name('user.messages');
+    Route::get('/user/messages/ajax',[messageController::class, 'getUserMessages'])->name('user.messages.ajax');
+
 });
 
 
-Route::get('/',[homeController::class,'index'])->name('Home');
+Route::get('/',[homeController::class,'index'])->name('index');

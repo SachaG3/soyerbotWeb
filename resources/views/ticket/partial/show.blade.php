@@ -1,4 +1,4 @@
-<div class="container mt-5" style="">
+<div class="container mt-5 mt-md-0 pt-5" style="">
     <div class="card">
         <div class="card-header bg-dark text-white">
             <h1>{{ $ticket->subject }}</h1>
@@ -26,21 +26,21 @@
             @endforeach
 
             <div class="card-footer">
-            <h3 class="text-black">Répondre</h3>
-            <form action="{{ route('ticket.responses.store', $ticket->id) }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="mb-3">
-                    <textarea class="form-control" name="response_content" id="response_content" rows="3" placeholder="Votre réponse..."></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="images" class="form-label">Ajouter des images :</label>
-                    <input type="file" class="form-control" name="images[]" id="images" multiple>
-                    <small class="text-muted">Vous pouvez sélectionner plusieurs images.</small>
-                </div>
-                <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-primary">Envoyer Réponse</button>
-                </div>
-            </form>
+                <h3 class="text-black">Répondre</h3>
+                <form action="{{ route('ticket.responses.store', $ticket->id) }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    <div class="mb-3">
+                        <textarea class="form-control" name="response_content" id="response_content" rows="3" placeholder="Votre réponse..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="images" class="form-label">Ajouter des images :</label>
+                        <input type="file" class="form-control" name="images[]" id="images" multiple>
+                        <small class="text-muted">Vous pouvez sélectionner plusieurs images.</small>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Envoyer Réponse</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
