@@ -6,7 +6,6 @@
     <meta name="robots" content="noindex, nofollow">
     <title>SoyerBot</title>
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{asset('css/style.scss')}}" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -63,7 +62,7 @@
                         <a class="nav-link active" href="{{route('Home')}}"><i class="fas fa-home"></i> Accueil</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{route('user.messages')}}"><i class="fas fa-info-circle"></i> Mes messages</a>
+                        <a class="nav-link" href="{{route('user.messages')}}"><i class="fas fa fa-comment" aria-hidden="true"></i> Mes messages</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#"><i class="fas fa-cogs"></i> Fonctionnalités</a>
@@ -78,15 +77,18 @@
                 <ul class="nav flex-column position-absolute bottom-0 w-100">
                     @auth
                         <li class="nav-item">
-                            <a href="{{route('tickets.index')}}" class="nav-link"><i class="fas fa-ticket-alt"></i> Tickets</a>
+                            <a href="{{route('tickets.index')}}" class="nav-link"> <i class="fas fa-ticket-alt"></i> Tickets</a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{route('setting')}}" class="nav-link"><i class="fas fa-user"></i> {{Auth::user()->pseudo}}</a>
+                            <a href="{{route('setting')}}" class="nav-link spin-setting">
+                                <i class="fas fa-cog svg-icon"></i>
+                                  {{Auth::user()->pseudo}}</a>
                         </li>
                         <li class="nav-item">
                             <form action="{{ route('logout') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="nav-link" style="color: white"><i class="fas fa-sign-out-alt"></i> Déconnexion</button>
+                                <button type="submit" class="nav-link" style="color: white">
+                                    <i class="fas fa-sign-out-alt"></i> Déconnexion</button>
                             </form>
                         </li>
                     @else

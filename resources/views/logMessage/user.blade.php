@@ -38,8 +38,23 @@
     </div>
 
     <div id="loading" class="text-center" style="display: none;">
-        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
-            <span class="visually-hidden">Chargement...</span>
+        <div aria-label="Orange and tan hamster running in a metal wheel" role="img" class="wheel-and-hamster" style="margin: auto">
+            <div class="wheel"></div>
+            <div class="hamster">
+                <div class="hamster__body">
+                    <div class="hamster__head">
+                        <div class="hamster__ear"></div>
+                        <div class="hamster__eye"></div>
+                        <div class="hamster__nose"></div>
+                    </div>
+                    <div class="hamster__limb hamster__limb--fr"></div>
+                    <div class="hamster__limb hamster__limb--fl"></div>
+                    <div class="hamster__limb hamster__limb--br"></div>
+                    <div class="hamster__limb hamster__limb--bl"></div>
+                    <div class="hamster__tail"></div>
+                </div>
+            </div>
+            <div class="spoke"></div>
         </div>
     </div>
 
@@ -52,21 +67,32 @@
 
 <script>
     $(document).ready(function() {
-        // Fonction pour charger les messages
+        // Extraire l'ID de l'utilisateur de l'URL, si présent
+        var userId = window.location.pathname.split('/').pop();
+        // Vérifier si l'userId est numérique, sinon le réinitialiser à null
+        userId = $.isNumeric(userId) ? userId : null;
+
+        // Fonction pour charger les messages, accepte maintenant userId comme argument
         function loadMessages(page = 1) {
             $('#loading').show();
             $('#messages_content').hide();
 
+            // Préparer les données de la requête, y compris l'userId si disponible
+            var requestData = {
+                page: page,
+                guild_id: $('#guild_filter').val(),
+                search: $('#search_messages').val(),
+                sort: $('#sort_messages').val(),
+                paginate: $('#pagination_size').val(),
+            };
+            if (userId) {
+                requestData.userId = userId; // Ajouter l'userId à la requête si spécifié
+            }
+
             $.ajax({
                 url: "{{ route('user.messages.ajax') }}",
                 type: 'GET',
-                data: {
-                    guild_id: $('#guild_filter').val(),
-                    search: $('#search_messages').val(),
-                    sort: $('#sort_messages').val(),
-                    paginate: $('#pagination_size').val(),
-                    page: page
-                },
+                data: requestData,
                 success: function(response) {
                     $('#messages_content').html(response).show();
                 },
@@ -78,6 +104,8 @@
                 }
             });
         }
+
+        // Gestion des événements pour les filtres et la pagination
         $('#guild_filter, #pagination_size, #sort_messages, #search_messages').on('change', function() {
             loadMessages();
         });
@@ -87,6 +115,9 @@
             var page = $(this).attr('href').split('page=')[1];
             loadMessages(page);
         });
+
+        // Charger initialement les messages
         loadMessages();
     });
+
 </script>

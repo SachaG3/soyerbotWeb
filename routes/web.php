@@ -49,8 +49,10 @@ Route::middleware(['auth.custom'])->group(function () {
     Route::post('/tickets/{ticket}/responses', [TicketController::class, 'storeResponse'])->name('ticket.responses.store');
     Route::delete('/tickets/{ticket}', [TicketController::class, 'destroy'])->name('tickets.destroy');
     Route::post('/tickets/status/{ticket}', [TicketController::class, 'updateStatus']);
-    Route::get('/user/messages', [messageController::class, 'getUserMessages'])->name('user.messages');
     Route::get('/user/messages/ajax',[messageController::class, 'getUserMessages'])->name('user.messages.ajax');
+    Route::get('/user/messages', [messageController::class, 'getUserMessages'])->name('user.messages');
+    Route::get('/user/messages/{userId}', [messageController::class, 'getUserMessages'])->name('user.messages.userid');
+
 
 });
 
