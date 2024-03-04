@@ -170,4 +170,57 @@ class LoginController extends Controller
         // Redirection vers la page d'accueil avec un message de succès
         return redirect(route('Home'))->with('status', 'Votre mot de passe a été réinitialisé avec succès !');
     }
+    public function ResetPasswordApi(Request $request)
+    {
+        $user = Utilisateur::where('email', $request->input('email'))->first();
+
+        // Si l'utilisateur n'existe pas, retourne une erreur
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Génère un token pour la réinitialisation du mot de passe
+        $passwordVerificationToken=Str::random(60);
+        $user->passwordVerificationToken = $passwordVerificationToken;
+
+        // Enregistre la date de création du token
+        $user->tokenCreationDate = now();
+        $user->save();
+
+        // Envoie un email avec le token de réinitialisation
+        Mail::to($user->email)->send(new resetPassword($passwordVerificationToken));
+        return response()->json([
+            'message' => 'email envoyé.',
+        ]);
+    }
+
+    public function loginApi(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $user = Utilisateur::where('email', $request->email)->first();
+
+        // Vérifier si l'utilisateur existe et si le mot de passe est correct
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json(['message' => 'Les informations de connexion fournies sont incorrectes.'], 401);
+        }
+
+        // Vérifier l'état de l'utilisateur (actif, banni, désactivé)
+        if($user->active != 1) {
+            $status = $user->active == 2 ? 'banni' : 'désactivé';
+            return response()->json(['message' => "Votre compte est $status."], 403);
+        }
+
+        // Création d'un token pour l'utilisateur
+        $token = $user->createToken('authToken')->plainTextToken;
+
+        return response()->json([
+            'message' => 'Connexion réussie.',
+            'user' => $user->only(['id', 'email', 'pseudo', 'role']), // Retourner les informations nécessaires
+            'token' => $token,
+        ]);
+    }
 }

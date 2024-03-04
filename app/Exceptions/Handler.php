@@ -28,6 +28,29 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $exception)
     {
+        if ($request->wantsJson()) {
+            // Gérer les exceptions spécifiquement pour les réponses API en JSON ici
+            if ($exception instanceof AuthenticationException) {
+                return response()->json(['error' => 'Non authentifié.'], 401);
+            }
+
+            if ($exception instanceof AuthorizationException) {
+                return response()->json(['error' => 'Accès non autorisé.'], 403);
+            }
+
+            if ($exception instanceof TokenMismatchException) {
+                return response()->json(['error' => 'Votre token CSRF est invalide.'], 419);
+            }
+
+            if ($exception instanceof HttpException) {
+                return response()->json(['error' => 'Erreur HTTP.', 'status' => $exception->getStatusCode()]);
+            }
+
+            // Gérer ici d'autres types d'exceptions si nécessaire
+
+            // Réponse par défaut pour les autres exceptions non capturées spécifiquement
+            return response()->json(['error' => 'Une erreur inattendue est survenue.'], 500);
+        }
         // Gestion du token CSRF manquant ou incorrect
         if ($exception instanceof TokenMismatchException) {
             return redirect()->route('login')->with('error', 'Votre session a expiré. Veuillez vous reconnecter.');
